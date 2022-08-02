@@ -1,11 +1,12 @@
 {
   "name": "electron-auto-update-simple",
-  "version": "1.0.0",
+  "version": "1.0.9",
   "description": "",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
     "publish": "build -p always",
+    "electron:build": "electron-builder",
     "run-server": "http-server dist -p 8080",
     "sign-dev-electron-app": "codesign --deep --force --verbose --sign - node_modules/electron/dist/Electron.app"
   },

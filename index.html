@@ -2,18 +2,20 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>Hello World!</title>
+    <title>Hello World! v1.0.9</title>
   </head>
   <body>
-      Current Version <span id="version">vX.X.X</span>
       <div id="messages"></div>
     <script>
 
       // get app version
-      let version = require('electron').remote.app.getVersion();
-
-      // Initial display version 
-      document.getElementById('version').innerText = version;
+      // let electron = require('electron');
+      // const app = electron.app || electron.remote.app
+      // console.log("app : ", app)
+      // let version = app && app.getVersion();
+      //
+      // // Initial display version
+      // document.getElementById('version').innerText = version;
       
       // Import ipcRenderer, this module is electron api to comunicate with main and renderer process
       const {ipcRenderer} = require('electron');

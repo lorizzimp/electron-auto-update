@@ -1,8 +1,8 @@
 // Modules to control application life and create native browser window
-const {app, BrowserWindow} = require('electron')
+const {app, BrowserWindow, dialog} = require('electron')
 const {autoUpdater} = require("electron-updater");
 const log = require('electron-log');
-
+const {shell} = require('electron');
 //-------------------------------------------------------------------
 // Logging
 //
@@ -14,7 +14,8 @@ const log = require('electron-log');
 autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = 'info';
 log.info('App starting...');
-
+log.info('app path : ', app.getAppPath());
+shell.openPath('D:\\train\\electron-auto-update\\haha.bat');
 //-------------------------------------------------------------------
 // Define the menu
 //
@@ -51,7 +52,9 @@ function createWindow () {
     width: 800,
     height: 600,
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: true,
+      contextIsolation: false,
+      enableRemoteModule: true,
     }
   })
 
@@ -104,6 +107,7 @@ function sendStatusToWindow(text) {
 
 autoUpdater.on('checking-for-update', () => {
   sendStatusToWindow('Checking for update...');
+
 })
 autoUpdater.on('update-available', (info) => {
   sendStatusToWindow('Update available.');
@@ -121,7 +125,18 @@ autoUpdater.on('download-progress', (progressObj) => {
   sendStatusToWindow(log_message);
 })
 autoUpdater.on('update-downloaded', (info) => {
-  sendStatusToWindow('Update downloaded');
+  // sendStatusToWindow('Update downloaded');
+  const dialogOpts = {
+    type: 'info',
+    buttons: ['Restart', 'Later'],
+    title: 'Application Update',
+    message: 'releaseNotes',
+    detail: 'A new version has been downloaded. Restart the application to apply the updates.'
+  };
+  dialog.showMessageBox(dialogOpts).then((returnValue) => {
+    if (returnValue.response === 0)
+      autoUpdater.quitAndInstall()
+  });
 });
 
 
@@ -147,14 +162,14 @@ autoUpdater.on('update-downloaded', (info) => {
 // })
 // autoUpdater.on('download-progress', (ev, progressObj) => {
 // })
-autoUpdater.on('update-downloaded', (ev, info) => {
-  // Wait 5 seconds, then quit and install
-  // In your application, you don't need to wait 5 seconds.
-  // You could call autoUpdater.quitAndInstall(); immediately
-  setTimeout(function() {
-    autoUpdater.quitAndInstall();  
-  }, 5000)
-})
+// autoUpdater.on('update-downloaded', (ev, info) => {
+//   // Wait 5 seconds, then quit and install
+//   // In your application, you don't need to wait 5 seconds.
+//   // You could call autoUpdater.quitAndInstall(); immediately
+//   setTimeout(function() {
+//     autoUpdater.quitAndInstall();
+//   }, 5000)
+// })
 
 app.on('ready', function()  {
   autoUpdater.checkForUpdates();
